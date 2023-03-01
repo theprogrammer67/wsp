@@ -22,6 +22,7 @@ func main() {
 
 	server := server.NewServer(config)
 	server.Start()
+	log.Printf("wsp server started at %s", server.Config.GetAddr())
 
 	// Wait signals
 	sigCh := make(chan os.Signal, 1)
@@ -30,4 +31,5 @@ func main() {
 
 	// When receives the signal, shutdown
 	server.Shutdown()
+	log.Println("wsp server stopped")
 }
