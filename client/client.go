@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"crypto/tls"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -21,8 +22,13 @@ type Client struct {
 func NewClient(config *Config) (c *Client) {
 	c = new(Client)
 	c.Config = config
+	// tr := &http.Transport{
+	// 	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	// }
+	// c.client = &http.Client{Transport: tr}
 	c.client = &http.Client{}
-	c.dialer = &websocket.Dialer{}
+	c.dialer = &websocket.Dialer{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
+	// c.dialer = &websocket.Dialer{}
 	c.pools = make(map[string]*Pool)
 	return
 }

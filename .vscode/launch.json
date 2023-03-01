@@ -12,6 +12,15 @@
             "program": "${workspaceRoot}/cmd/wsp_server/main.go",
             "args": ["-config", "${workspaceRoot}/examples/wsp_server.cfg"],
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Debug client pubprox",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceRoot}/cmd/wsp_client/main.go",
+            "args": ["-config", "${workspaceRoot}/wsp_client_pubprox.cfg"],
+            "console": "integratedTerminal"
         }
     ]
 }
