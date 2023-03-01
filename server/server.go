@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -92,6 +93,7 @@ func (s *Server) Start() {
 	r.HandleFunc("/register", s.Register)
 	r.HandleFunc("/request", s.Request)
 	r.HandleFunc("/status", s.status)
+	r.HandleFunc("/", s.proxyRequest)
 
 	// Dispatch connection from available pools to clients requests
 	// in a separate thread from the server thread.
@@ -313,6 +315,19 @@ func (s *Server) Register(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) status(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("ok"))
+}
+
+func (s *Server) proxyRequest(w http.ResponseWriter, r *http.Request) {
+	p := r.URL.Path
+	if !(strings.HasPrefix(p, "/")) {
+		p = "/" + p
+	}
+
+	d := fmt.Sprintf("http://localhost%s", p)
+	log.Printf("proxy request - URL.Path: %s to %s", r.URL.Path, d)
+
+	r.Header.Set("X-PROXY-DESTINATION", d)
+	s.Request(w, r)
 }
 
 // Shutdown stop the Server
